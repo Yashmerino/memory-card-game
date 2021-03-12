@@ -11,6 +11,8 @@ public:
 
 	bool checkHover(sf::RectangleShape& shape, sf::RenderWindow& window);
 
+	void shuffleCards();
+
 	void run();
 
 private:
@@ -24,6 +26,7 @@ private:
 private:
 	sf::RectangleShape cards[12];
 	sf::Texture cardsTextures[8];
+	int cardsTexturesBounds[12];
 
 };
 

@@ -1,4 +1,5 @@
 #include "../headers/Game.h"
+#include <iostream>
 
 Game::Game()
 {
@@ -62,6 +63,8 @@ Game::Game()
 	buttons[0].setPosition(420.f, 585.f);
 	buttons[1].setPosition(240.f, 585.f);
 
+
+	shuffleCards(); //Preparing cards
 }
 
 Game::~Game()
@@ -75,6 +78,40 @@ bool Game::checkHover(sf::RectangleShape& shape, sf::RenderWindow& window)
 	sf::FloatRect bounds = shape.getGlobalBounds();
 
 	return bounds.contains(mousePos);
+}
+
+void Game::shuffleCards()
+{
+	srand(time(NULL));
+
+	int randomNumber;
+
+	for (int i = 0; i < 12; )
+	{
+		bool alreadyThere = false;
+		randomNumber = rand() % 6;
+
+		for (int j = 0; j < i; j++)
+		{
+			if (randomNumber == cardsTexturesBounds[j])
+			{
+				for (int h = j + 1; h < i; h++)
+				{
+					if (randomNumber == cardsTexturesBounds[h])
+					{
+						alreadyThere = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if (!alreadyThere)
+		{
+			cardsTexturesBounds[i] = randomNumber;
+			i++;
+		}
+	}
 }
 
 void Game::run()
@@ -99,6 +136,10 @@ void Game::run()
 				{
 					cards[i].setTexture(&cardsTextures[7]);
 				}
+				else if (event.type == sf::Event::MouseButtonPressed && checkHover(cards[i], window))
+				{
+					cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
+				}
 				else
 				{
 					cards[i].setTexture(&cardsTextures[6]);
@@ -110,6 +151,11 @@ void Game::run()
 				if (event.type == sf::Event::MouseMoved && checkHover(buttons[i], window))
 				{
 					buttons[i].setTexture(&buttonsTextures[i * 2 + 1]);
+				}
+				else if(event.type == sf::Event::MouseButtonPressed && checkHover(buttons[0], window))
+				{
+					window.close();
+					exit(0);
 				}
 				else
 				{
