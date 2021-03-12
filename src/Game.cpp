@@ -69,6 +69,14 @@ Game::~Game()
 
 }
 
+bool Game::checkHover(sf::RectangleShape& shape, sf::RenderWindow& window)
+{
+	sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	sf::FloatRect bounds = shape.getGlobalBounds();
+
+	return bounds.contains(mousePos);
+}
+
 void Game::run()
 {
 	sf::RenderWindow window(sf::VideoMode(480, 640), "Pexeso");
@@ -79,8 +87,35 @@ void Game::run()
 
 		while (window.pollEvent(event))
 		{
+
 			if (event.type == sf::Event::Closed)
+			{
 				window.close();
+			}
+
+			for (int i = 0; i < 12; i++)
+			{
+				if (event.type == sf::Event::MouseMoved && checkHover(cards[i], window))
+				{
+					cards[i].setTexture(&cardsTextures[7]);
+				}
+				else
+				{
+					cards[i].setTexture(&cardsTextures[6]);
+				}
+			}
+
+			for (int i = 0; i < 2; i++)
+			{
+				if (event.type == sf::Event::MouseMoved && checkHover(buttons[i], window))
+				{
+					buttons[i].setTexture(&buttonsTextures[i * 2 + 1]);
+				}
+				else
+				{
+					buttons[i].setTexture(&buttonsTextures[i * 2]);
+				}
+			}
 		}
 
 		//

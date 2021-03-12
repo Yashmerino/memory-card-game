@@ -9,6 +9,8 @@ public:
 
 	~Game();
 
+	bool checkHover(sf::RectangleShape& shape, sf::RenderWindow& window);
+
 	void run();
 
 private:
