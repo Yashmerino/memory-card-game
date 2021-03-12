@@ -79,7 +79,7 @@ bool Game::checkHover(sf::RectangleShape& shape, sf::RenderWindow& window)
 
 void Game::run()
 {
-	sf::RenderWindow window(sf::VideoMode(480, 640), "Pexeso");
+	sf::RenderWindow window(sf::VideoMode(480, 640), "Memory Card Game");
 
 	while (window.isOpen())
 	{
