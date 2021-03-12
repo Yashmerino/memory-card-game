@@ -118,6 +118,8 @@ void Game::run()
 {
 	sf::RenderWindow window(sf::VideoMode(480, 640), "Memory Card Game");
 
+	int turns = -1;
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -134,15 +136,37 @@ void Game::run()
 			{
 				if (event.type == sf::Event::MouseMoved && checkHover(cards[i], window))
 				{
-					cards[i].setTexture(&cardsTextures[7]);
+					if (!(selectedCards[0] == i || selectedCards[1] == i))
+					{
+						cards[i].setTexture(&cardsTextures[7]);
+					}
 				}
 				else if (event.type == sf::Event::MouseButtonPressed && checkHover(cards[i], window))
 				{
+					turns++;
+					
+					if(turns > 1)
+					{
+						turns = -1;
+
+						for (int i = 0; i < 2; i++)
+						{
+							cards[selectedCards[i]].setTexture(&cardsTextures[6]);
+						}
+
+						break;
+					}
+
+					selectedCards[turns] = i;
+
 					cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
 				}
 				else
 				{
-					cards[i].setTexture(&cardsTextures[6]);
+					if(!(selectedCards[0] == i || selectedCards[1] == i))
+					{
+						cards[i].setTexture(&cardsTextures[6]);
+					}
 				}
 			}
 

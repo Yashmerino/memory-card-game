@@ -26,8 +26,8 @@ private:
 private:
 	sf::RectangleShape cards[12];
 	sf::Texture cardsTextures[8];
-	int cardsTexturesBounds[12];
-
+	unsigned short cardsTexturesBounds[12];
+	unsigned short selectedCards[2];
 };
 
 #endif
