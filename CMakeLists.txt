@@ -8,7 +8,7 @@ project ("Pexeso")
 add_subdirectory("3rdparty/SFML-2.5.1")
 
 # Add source to this project's executable.
-add_executable (Pexeso "Pexeso.cpp")
+add_executable (Pexeso "Pexeso.cpp" "src/Game.cpp")
 
 target_link_libraries(Pexeso sfml-audio sfml-window sfml-graphics sfml-system)
 
