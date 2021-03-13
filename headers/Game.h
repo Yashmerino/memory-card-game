@@ -40,6 +40,11 @@ private:
 	short cardsSelected[2];
 	short cardsCorrect[12];
 	int turns;
+
+private:
+	sf::Font font;
+	sf::Text turnsText;
+	sf::String turnsString;
 };
 
 #endif

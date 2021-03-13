@@ -72,6 +72,17 @@ Game::Game()
 	}
 
 	turns = -1;
+
+	font.loadFromFile("fonts/ac.ttf");
+	
+	turnsString = "Turns: 0";
+
+	turnsText.setFont(font);
+	turnsText.setString(turnsString);
+	turnsText.setColor(sf::Color::White);
+	turnsText.setCharacterSize(36);
+	turnsText.setOrigin(turnsText.getLocalBounds().width / 2, turnsText.getLocalBounds().height / 2);
+	turnsText.setPosition(80.f, 575.f);
 }
 
 Game::~Game()
@@ -89,7 +100,7 @@ bool Game::isHovered(sf::RectangleShape& shape, sf::RenderWindow& window)
 
 void Game::restartGame()
 {
-	for(int i=0; i<12; i++)
+	for (int i = 0; i < 12; i++)
 	{
 		cardsCorrect[i] = -1;
 		cards[i].setTexture(&cardsTextures[6]);
@@ -97,6 +108,9 @@ void Game::restartGame()
 
 	cardsSelected[0] = -1;
 	cardsSelected[1] = -1;
+
+	turnsString = "Turns: 0";
+	turnsText.setString(turnsString);
 }
 
 void Game::shuffleCards()
@@ -135,6 +149,11 @@ void Game::shuffleCards()
 
 bool Game::isCorrect()
 {
+	static int temp = 0;
+	temp += 1;
+
+	turnsString = "Turns: " + std::to_string(temp);
+
 	if (cards[cardsSelected[0]].getTexture() == cards[cardsSelected[1]].getTexture())
 	{
 		for (int i = 0; i < 12; i++)
@@ -290,6 +309,8 @@ void Game::run()
 			}
 		}
 
+		turnsText.setString(turnsString);
+
 		window.clear(sf::Color::White);
 		for (int i = 0; i < 2; i++)
 			window.draw(backgrounds[i]);
@@ -297,6 +318,7 @@ void Game::run()
 			window.draw(cards[i]);
 		for (int i = 0; i < 2; i++)
 			window.draw(buttons[i]);
+		window.draw(turnsText);
 		window.display();
 	}
 }
