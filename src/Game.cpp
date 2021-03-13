@@ -83,6 +83,11 @@ Game::Game()
 	turnsText.setCharacterSize(36);
 	turnsText.setOrigin(turnsText.getLocalBounds().width / 2, turnsText.getLocalBounds().height / 2);
 	turnsText.setPosition(80.f, 575.f);
+
+	sounds[0].loadFromFile("audio/win.wav");
+	sounds[1].loadFromFile("audio/new.wav");
+	sounds[2].loadFromFile("audio/correctPair.wav");
+	sounds[3].loadFromFile("audio/incorrectPair.wav");
 }
 
 Game::~Game()
@@ -100,6 +105,9 @@ bool Game::isHovered(sf::RectangleShape& shape, sf::RenderWindow& window)
 
 void Game::restartGame()
 {
+	audio.setBuffer(sounds[1]);
+	audio.play();
+
 	for (int i = 0; i < 12; i++)
 	{
 		cardsCorrect[i] = -1;
@@ -165,10 +173,17 @@ bool Game::isCorrect()
 				break;
 			}
 		}
+
+		audio.setBuffer(sounds[2]);
+		audio.play();
+
 		return true;
 	}
 	else
 	{
+		audio.setBuffer(sounds[3]);
+		audio.play();
+
 		return false;
 	}
 }
@@ -247,6 +262,14 @@ void Game::run()
 							for (int i = 0; i < 2; i++)
 							{
 								cards[cardsSelected[i]].setTexture(&cardsTextures[6]);
+							}
+						}
+						else
+						{
+							if(isOver())
+							{
+								audio.setBuffer(sounds[0]);
+								audio.play();
 							}
 						}
 

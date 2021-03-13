@@ -1,6 +1,7 @@
 #ifndef _GAME_H_
 #define _GAME_H_
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class Game
 {
@@ -45,6 +46,10 @@ private:
 	sf::Font font;
 	sf::Text turnsText;
 	sf::String turnsString;
+
+private:
+	sf::Sound audio;
+	sf::SoundBuffer sounds[4];
 };
 
 #endif
