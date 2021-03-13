@@ -9,9 +9,17 @@ public:
 
 	~Game();
 
-	bool checkHover(sf::RectangleShape& shape, sf::RenderWindow& window);
+	bool isHovered(sf::RectangleShape& shape, sf::RenderWindow& window);
+
+	void restartGame();
 
 	void shuffleCards();
+
+	bool isCorrect();
+
+	bool inCorrect(int n);
+
+	bool isOver();
 
 	void run();
 
@@ -26,8 +34,12 @@ private:
 private:
 	sf::RectangleShape cards[12];
 	sf::Texture cardsTextures[8];
+
+private:
 	unsigned short cardsTexturesBounds[12];
-	unsigned short selectedCards[2];
+	short cardsSelected[2];
+	short cardsCorrect[12];
+	int turns;
 };
 
 #endif

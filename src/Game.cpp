@@ -1,5 +1,6 @@
 #include "../headers/Game.h"
 #include <iostream>
+#include <Windows.h>
 
 Game::Game()
 {
@@ -63,8 +64,14 @@ Game::Game()
 	buttons[0].setPosition(420.f, 585.f);
 	buttons[1].setPosition(240.f, 585.f);
 
-
 	shuffleCards(); //Preparing cards
+
+	for (int i = 0; i < 12; i++)
+	{
+		cardsCorrect[i] = -1;
+	}
+
+	turns = -1;
 }
 
 Game::~Game()
@@ -72,12 +79,24 @@ Game::~Game()
 
 }
 
-bool Game::checkHover(sf::RectangleShape& shape, sf::RenderWindow& window)
+bool Game::isHovered(sf::RectangleShape& shape, sf::RenderWindow& window)
 {
 	sf::Vector2f mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 	sf::FloatRect bounds = shape.getGlobalBounds();
 
 	return bounds.contains(mousePos);
+}
+
+void Game::restartGame()
+{
+	for(int i=0; i<12; i++)
+	{
+		cardsCorrect[i] = -1;
+		cards[i].setTexture(&cardsTextures[6]);
+	}
+
+	cardsSelected[0] = -1;
+	cardsSelected[1] = -1;
 }
 
 void Game::shuffleCards()
@@ -114,11 +133,56 @@ void Game::shuffleCards()
 	}
 }
 
+bool Game::isCorrect()
+{
+	if (cards[cardsSelected[0]].getTexture() == cards[cardsSelected[1]].getTexture())
+	{
+		for (int i = 0; i < 12; i++)
+		{
+			if (cardsCorrect[i] == -1)
+			{
+				cardsCorrect[i] = cardsSelected[0];
+				cardsCorrect[i + 1] = cardsSelected[1];
+				break;
+			}
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Game::inCorrect(int n)
+{
+	for (int i = 0; i < 12; i++)
+	{
+		if(cardsCorrect[i] == n)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool Game::isOver()
+{
+	for (int i = 0; i < 12; i++)
+	{
+		if(cardsCorrect[i] == -1)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
 void Game::run()
 {
 	sf::RenderWindow window(sf::VideoMode(480, 640), "Memory Card Game");
-
-	int turns = -1;
 
 	while (window.isOpen())
 	{
@@ -126,60 +190,70 @@ void Game::run()
 
 		while (window.pollEvent(event))
 		{
-
 			if (event.type == sf::Event::Closed)
 			{
 				window.close();
+				exit(0);
 			}
 
 			for (int i = 0; i < 12; i++)
 			{
-				if (event.type == sf::Event::MouseMoved && checkHover(cards[i], window))
-				{
-					if (!(selectedCards[0] == i || selectedCards[1] == i))
-					{
-						cards[i].setTexture(&cardsTextures[7]);
-					}
-				}
-				else if (event.type == sf::Event::MouseButtonPressed && checkHover(cards[i], window))
+				if (event.type == sf::Event::MouseButtonPressed && isHovered(cards[i], window) && !(inCorrect(i)))
 				{
 					turns++;
 					
-					if(turns > 1)
-					{
-						turns = -1;
+					cardsSelected[turns] = i;
 
-						for (int i = 0; i < 2; i++)
-						{
-							cards[selectedCards[i]].setTexture(&cardsTextures[6]);
+					if (turns >= 1 && cardsSelected[0] == cardsSelected[1])
+					{
+						turns = 0;
+						continue;
+					}
+					else if (turns >= 1)
+					{
+						cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
+
+						{ //Showing 2 last cards
+							for (int i = 0; i < 12; i++) 
+								window.draw(cards[i]);
+							window.display();
+							event.type = sf::Event::MouseEntered;
+							Sleep(700);
 						}
 
-						break;
+						turns = -1;
+
+						if (!isCorrect())
+						{
+							for (int i = 0; i < 2; i++)
+							{
+								cards[cardsSelected[i]].setTexture(&cardsTextures[6]);
+							}
+						}
+
+						continue;
 					}
 
-					selectedCards[turns] = i;
+					cardsSelected[turns] = i;
 
 					cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
-				}
-				else
-				{
-					if(!(selectedCards[0] == i || selectedCards[1] == i))
-					{
-						cards[i].setTexture(&cardsTextures[6]);
-					}
 				}
 			}
 
 			for (int i = 0; i < 2; i++)
 			{
-				if (event.type == sf::Event::MouseMoved && checkHover(buttons[i], window))
+				if (event.type == sf::Event::MouseMoved && isHovered(buttons[i], window))
 				{
 					buttons[i].setTexture(&buttonsTextures[i * 2 + 1]);
 				}
-				else if(event.type == sf::Event::MouseButtonPressed && checkHover(buttons[0], window))
+				else if(event.type == sf::Event::MouseButtonPressed && isHovered(buttons[0], window))
 				{
 					window.close();
 					exit(0);
+				}
+				else if (event.type == sf::Event::MouseButtonPressed && isHovered(buttons[1], window))
+				{
+					restartGame();
 				}
 				else
 				{
@@ -187,8 +261,6 @@ void Game::run()
 				}
 			}
 		}
-
-		//
 
 		window.clear(sf::Color::White);
 		for (int i = 0; i < 2; i++)
