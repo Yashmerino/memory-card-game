@@ -46,6 +46,7 @@ private:
 	sf::Font font;
 	sf::Text turnsText;
 	sf::String turnsString;
+	int temp;
 
 private:
 	sf::Sound audio;

@@ -88,6 +88,8 @@ Game::Game()
 	sounds[1].loadFromFile("audio/new.wav");
 	sounds[2].loadFromFile("audio/correctPair.wav");
 	sounds[3].loadFromFile("audio/incorrectPair.wav");
+
+	temp = 0;
 }
 
 Game::~Game()
@@ -119,6 +121,8 @@ void Game::restartGame()
 
 	turnsString = "Turns: 0";
 	turnsText.setString(turnsString);
+
+	temp = 0;
 }
 
 void Game::shuffleCards()
@@ -157,7 +161,6 @@ void Game::shuffleCards()
 
 bool Game::isCorrect()
 {
-	static int temp = 0;
 	temp += 1;
 
 	turnsString = "Turns: " + std::to_string(temp);
