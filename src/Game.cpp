@@ -201,7 +201,7 @@ void Game::run()
 				if (event.type == sf::Event::MouseButtonPressed && isHovered(cards[i], window) && !(inCorrect(i)))
 				{
 					turns++;
-					
+
 					cardsSelected[turns] = i;
 
 					if (turns >= 1 && cardsSelected[0] == cardsSelected[1])
@@ -214,7 +214,7 @@ void Game::run()
 						cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
 
 						{ //Showing 2 last cards
-							for (int i = 0; i < 12; i++) 
+							for (int i = 0; i < 12; i++)
 								window.draw(cards[i]);
 							window.display();
 							event.type = sf::Event::MouseEntered;
@@ -237,6 +237,34 @@ void Game::run()
 					cardsSelected[turns] = i;
 
 					cards[i].setTexture(&cardsTextures[cardsTexturesBounds[i]]);
+				}
+				else if (event.type == sf::Event::MouseMoved && isHovered(cards[i], window))
+				{
+					bool allowChange = true;
+
+					if (cardsSelected[0] == i || cardsSelected[1] == i)
+						allowChange = false;
+
+					for (int j = 0; j < 12; j++)
+						if (cardsCorrect[j] == i)
+							allowChange = false;
+
+					if(allowChange)
+					cards[i].setTexture(&cardsTextures[7]);
+				}
+				else
+				{
+					bool allowChange = true;
+
+					if (cardsSelected[0] == i || cardsSelected[1] == i)
+						allowChange = false;
+
+					for (int j = 0; j < 12; j++)
+						if (cardsCorrect[j] == i)
+							allowChange = false;
+
+					if (allowChange)
+					cards[i].setTexture(&cardsTextures[6]);
 				}
 			}
 
