@@ -110,6 +110,8 @@ void Game::restartGame()
 	audio.setBuffer(sounds[1]);
 	audio.play();
 
+	shuffleCards();
+
 	for (int i = 0; i < 12; i++)
 	{
 		cardsCorrect[i] = -1;
