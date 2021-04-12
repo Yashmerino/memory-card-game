@@ -1,5 +1,5 @@
 <h1 align="center"><strong><em>Memory Card Game</strong></em></h1>
-<p align="center"><img src="http://englishprofs.pbworks.com/f/memory-game.png" alt="Tetris logo" height=200 width=400></p>
+<p align="center"><img src="http://englishprofs.pbworks.com/f/memory-game.png" alt="Memory Card Game logo" height=200 width=400></p>
   
 # How to run the app?
 
